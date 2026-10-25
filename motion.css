@@ -1,0 +1,110 @@
+/* ALISHER / MONO 11 — kinetic editorial motion layer
+   Animates transforms and opacity; no scroll hijack or layout-based parallax. */
+:root{--swift:cubic-bezier(.16,1,.3,1);--cut:cubic-bezier(.25,1,.5,1);--black:#0a0a0a;--bone:#f0eee9;--step:steps(2,end)}
+html{scroll-behavior:smooth}body{background:var(--bone)}
+/* Interaction surfaces: deliberately immediate and heavy. */
+.desktop-nav{width:max-content;max-width:calc(100vw - 440px);gap:1px;box-sizing:content-box}
+.desktop-nav a{transition:background-color 120ms steps(2,end),color 120ms steps(2,end)}
+.desktop-nav a:hover,.desktop-nav a.active{background:#eae8e4;color:#111}
+.soundless-button,.menu-button{transition:background 120ms steps(2,end),color 120ms steps(2,end),border-color 120ms steps(2,end)}
+.outline-action{transition:color 120ms steps(2,end),background-color 120ms steps(2,end),outline-offset 120ms steps(2,end),transform 330ms var(--swift)}
+.outline-action:hover{transform:translateY(-3px)}
+.text-link{transition:gap 330ms var(--swift)}
+.project-art{transition:border-radius 380ms var(--swift),outline-color 120ms linear;cursor:pointer}
+.project:hover .project-art,.project-art:focus-visible{border-radius:0;outline:1px solid currentColor;outline-offset:-8px}
+.project .art-center{transition:transform 550ms var(--swift)}
+.project:hover .art-center{transform:translate3d(0,-8px,0) scale(1.03)}
+.project-button{transition:color 120ms steps(2,end),background 120ms steps(2,end),transform 340ms var(--swift)}
+.project-button:hover{transform:rotate(45deg)}
+.award{transition:padding-left 360ms var(--swift),background-color 120ms steps(2,end)}
+.method-tabs button{transition:color 120ms steps(2,end),background 120ms steps(2,end)}
+.mobile-nav{transition:transform 350ms var(--cut),visibility 350ms,opacity 110ms steps(2,end)}
+.mobile-nav:not(.open){transform:translate3d(0,-3%,0)}
+.mobile-nav.open nav a{animation:menu-item-in 440ms var(--swift) both}
+.mobile-nav.open nav a:nth-child(2){animation-delay:45ms}.mobile-nav.open nav a:nth-child(3){animation-delay:75ms}.mobile-nav.open nav a:nth-child(4){animation-delay:105ms}.mobile-nav.open nav a:nth-child(5){animation-delay:135ms}.mobile-nav.open nav a:nth-child(6){animation-delay:165ms}
+@keyframes menu-item-in{from{transform:translate3d(0,32px,0);opacity:0}to{transform:none;opacity:1}}
+/* No opaque intro can block taps or keyboard: a decorative page leader only. */
+.page-cut{pointer-events:none;position:fixed;inset:0;z-index:200;background:var(--black);transform-origin:right center;animation:opening-cut 820ms var(--cut) both}
+@keyframes opening-cut{0%,16%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+/* Hero uses two independent masked lines and a mechanical current-status ticker. */
+.hero-line>span{animation:hero-rise 620ms var(--swift) both}
+.hero-line:nth-child(2)>span{animation-delay:115ms}
+@keyframes hero-rise{0%{transform:translate3d(0,105%,0);opacity:1}100%{transform:none;opacity:1}}
+.hero-descriptor{animation:hero-detail 450ms var(--swift) 300ms both}
+.hero-bottom,.hero-top{animation:hero-detail 480ms var(--swift) 400ms both}
+@keyframes hero-detail{from{opacity:0;transform:translate3d(0,14px,0)}to{opacity:1;transform:none}}
+.hero-ticker{display:flex;align-items:center;justify-content:center;gap:15px;margin:23px auto 0;font:10px/1.4 var(--mono);letter-spacing:.11em;color:#555;text-transform:uppercase;max-width:95%}
+.ticker-prefix{color:#555}.ticker-window{height:1.5em;min-width:220px;position:relative;overflow:hidden;color:#111;text-align:left;border-left:1px solid #86847c;padding-left:12px}
+.ticker-window>span{position:absolute;top:0;left:12px;white-space:nowrap;animation:status-one 9s steps(1,end) infinite;opacity:0}
+.ticker-window>span:nth-child(1){animation-name:status-one}.ticker-window>span:nth-child(2){animation-name:status-two}.ticker-window>span:nth-child(3){animation-name:status-three}
+@keyframes status-one{0%,32%{opacity:1}33%,100%{opacity:0}}
+@keyframes status-two{0%,32%{opacity:0}33%,65%{opacity:1}66%,100%{opacity:0}}
+@keyframes status-three{0%,65%{opacity:0}66%,99%{opacity:1}100%{opacity:0}}
+.ticker-index{color:#999}
+/* Masks remain readable without JS. Motion class is only enabled after observer setup. */
+.masked-heading .mask-line{display:block;overflow:hidden;padding:.055em .05em .09em;margin:-.055em -.05em -.09em}
+.masked-heading .mask-line>span{display:block}
+.js-ready:not(.motion-off) .masked-heading:not(.is-visible) .mask-line>span{transform:translate3d(0,105%,0);opacity:1}
+.js-ready:not(.motion-off) .masked-heading .mask-line>span{transition:transform 480ms var(--swift)}
+.js-ready .masked-heading .mask-line:nth-child(2)>span{transition-delay:65ms}
+.js-ready .masked-heading .mask-line:nth-child(3)>span{transition-delay:110ms}
+.js-ready:not(.motion-off) [data-reveal]:not(.visible){opacity:0;transform:translate3d(0,18px,0)}
+.js-ready [data-reveal]{transition:transform 460ms var(--swift),opacity 180ms steps(2,end)}
+.js-ready .award[data-reveal]{transition:transform 410ms var(--swift),opacity 120ms steps(2,end),padding-left 330ms var(--swift),background-color 120ms steps(2,end)}
+.js-ready .award[data-reveal]:not(.visible){transform:translate3d(-12px,0,0)}
+.js-ready .project[data-reveal]:nth-child(3n+2){transition-delay:55ms}.js-ready .project[data-reveal]:nth-child(3n){transition-delay:110ms}
+/* Ribbons duplicate their content exactly, guaranteeing a seamless translation. */
+.marquee{contain:paint;padding:11px 0;background:#0b0b0b;color:#efeee9}
+.marquee-track{gap:0;animation:kinetic-loop 48s linear infinite}
+.marquee-set{display:flex;gap:0;align-items:center;flex:0 0 auto;white-space:nowrap}
+.marquee-set span{padding:0 36px;font:11px/1.4 var(--mono);letter-spacing:.2em}
+.marquee-set b{font-size:12px;font-weight:400;padding:0 16px}
+.statement-rail{gap:0;animation:kinetic-loop 34s linear infinite reverse}
+.statement-set{display:flex;flex:0 0 auto;white-space:nowrap;align-items:center}
+.statement-set>span{padding-right:40px}
+@keyframes kinetic-loop{to{transform:translate3d(-50%,0,0)}}
+/* Split monochrome typography scene. Browser scrolling stays completely native. */
+.split-scene{position:relative;height:195svh;background:#eae7e1;isolation:isolate}
+.split-sticky{position:sticky;top:0;height:100svh;min-height:420px;overflow:hidden;isolation:isolate}
+.split-panel{position:absolute;inset:0 50% 0 0;background:#edeae4;color:#0b0b0b}
+.split-dark{inset:0 0 0 50%;background:#101010;color:#f2f0ec}
+.split-side-label{position:absolute;top:clamp(80px,10vw,130px);left:var(--pad);font:11px var(--mono);letter-spacing:.1em}
+.split-dark .split-side-label{left:auto;right:var(--pad)}
+.split-symbol{position:absolute;bottom:12vh;left:var(--pad);font:36px/1 var(--sans)}
+.split-dark .split-symbol{left:auto;right:var(--pad)}
+.split-type{position:absolute;inset:0;display:grid;align-items:center;pointer-events:none;transform:translate3d(0,var(--split-y,0px),0)}
+.split-type>span{position:absolute;inset-inline:0;margin-inline:auto;width:max-content;max-width:none;left:50%;top:50%;transform:translate(-50%,-50%);font:400 clamp(80px,19vw,340px)/.77 var(--display);letter-spacing:-.055em;text-align:center;white-space:nowrap}
+.split-type-left{color:#0b0b0b;clip-path:inset(0 50% 0 0)}
+.split-type-right{color:#efece7;clip-path:inset(0 0 0 50%)}
+.split-bottom{position:absolute;bottom:35px;left:var(--pad);right:var(--pad);display:flex;justify-content:space-between;gap:20px;font:10px var(--mono);letter-spacing:.06em;mix-blend-mode:difference;color:#fff}
+/* A lightweight visual pointer: only when coarse pointer and reduced motion are both false. */
+.pointer-orbit{position:fixed;top:0;left:0;width:32px;height:32px;border:1px solid #fff;border-radius:50%;background:#fff;mix-blend-mode:difference;transform:translate3d(-80px,-80px,0);pointer-events:none;z-index:400;opacity:0;transition:width 270ms var(--swift),height 270ms var(--swift),opacity 120ms steps(2,end);will-change:transform}
+.pointer-orbit span{position:absolute;inset:47%;background:#000;border-radius:50%}
+.pointer-orbit.is-active{opacity:1}.pointer-orbit.is-target{width:50px;height:50px}
+/* Dialogs: native focus-trapping, clean entrance, no background click shields. */
+dialog[open]{animation:dialog-cut 310ms var(--cut) both}
+@keyframes dialog-cut{from{opacity:0;transform:translate3d(0,25px,0)}to{opacity:1;transform:none}}
+/* Baseline alignment improvements for all ratios. */
+.brand{font-family:var(--sans);letter-spacing:-.035em}
+.section-heading{overflow-wrap:anywhere}
+.section-dark,.section-light{position:relative}
+.heading-row,.award,.school,.project{min-width:0}
+.project-grid{align-items:start}
+.award h3,.school-main h3{overflow-wrap:break-word}
+.footer-line{flex-wrap:wrap}
+@media(min-width:1201px){.desktop-nav{max-width:calc(100vw - 390px)}}
+@media(max-width:1200px){.header{align-items:center}.hero-ticker{margin-top:16px}.split-scene{height:166svh}.split-type>span{font-size:clamp(75px,18vw,205px)}}
+@media(max-width:820px){.split-scene{height:142svh}.split-sticky{min-height:0}.split-type>span{font-size:clamp(74px,18vw,140px)}.split-bottom{bottom:23px}.split-side-label{top:100px}.hero-ticker{font-size:9px}}
+@media(max-width:610px){.hero-ticker{gap:9px;font-size:8px}.ticker-prefix,.ticker-index{display:none}.ticker-window{min-width:215px;text-align:center;border-left:0}.ticker-window>span{left:0;width:100%;text-align:center}.split-type>span{font-size:19vw;letter-spacing:-.06em}.split-side-label{font-size:8px;top:88px}.split-bottom{font-size:8px}.marquee-set span{font-size:10px;padding:0 19px}.split-scene{height:134svh}.split-symbol{font-size:22px}.hero-descriptor{margin-top:6px}.hero h1{font-size:clamp(66px,17vw,105px)}}
+@media(max-width:360px){.hero-ticker{display:none}.split-bottom{font-size:7px}}
+@media(max-height:540px) and (orientation:landscape){.split-scene{height:150svh}.split-sticky{height:100svh}.split-type>span{font-size:clamp(65px,12vw,135px)}.split-side-label{top:65px}.split-bottom{bottom:13px}}
+@media(hover:none),(pointer:coarse){.pointer-orbit{display:none!important}}
+@media(prefers-reduced-motion:reduce){.page-cut,.pointer-orbit{display:none!important}.js-ready .masked-heading .mask-line>span,.js-ready [data-reveal]{transform:none!important;opacity:1!important;transition:none!important}.marquee-track,.statement-rail,.hero-ticker span,.hero-line>span,.hero-bottom,.hero-top,.hero-descriptor{animation:none!important}.ticker-window>span:not(:first-child){display:none}.ticker-window>span:first-child{opacity:1}}
+html.motion-off .page-cut,html.motion-off .pointer-orbit{display:none!important}
+html.motion-off .masked-heading .mask-line>span,html.motion-off [data-reveal]{opacity:1!important;transform:none!important}
+html.motion-off .ticker-window>span:not(:first-child){display:none}html.motion-off .ticker-window>span:first-child{opacity:1}
+
+/* The scroll dial is minimal instead of squeezing a full sentence into a circle. */
+.discover-ring{inset:0;display:flex;justify-content:center;align-items:flex-start;padding-top:13px;font:8px/1 var(--mono);letter-spacing:.12em}.discover-arrow{transform:translateY(5px)}
+@media(max-width:610px){.discover-ring{font-size:6px;padding-top:8px}.discover-arrow{transform:translateY(4px)}}
+@media(max-height:540px) and (orientation:landscape){.split-sticky{min-height:0}}
