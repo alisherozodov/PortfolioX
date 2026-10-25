@@ -1,4 +1,4 @@
-# ALISHER — Kinetic Monochrome / 11
+My personal portfolio, monochrome version
 
 A standalone, static, black-and-ivory portfolio for Alisher Ozodov.
 
